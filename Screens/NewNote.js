@@ -2,15 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropdownSelector from '../components/DropdownSelector';
-
-const STORAGE_KEY = 'notes';
+import { STORAGE_KEY } from '../Globals/constants';
 
 const NewNote = ({ navigation }) => {
   const [selectedClient, setSelectedClient] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [noteText, setNoteText] = useState('');
   const [showInput, setShowInput] = useState(false);
-  const [savedNotes, setSavedNotes] = useState([]);
 
   const clients = [
     { label: 'Tom', value: 'Tom' },
@@ -26,16 +24,13 @@ const NewNote = ({ navigation }) => {
 
   useEffect(() => {
     checkShowInput();
-    // loadNotes();
   }, [selectedClient, selectedCategory]);
 
   const handleClientChange = (value) => {
-    console.log('1 is ', value);
     setSelectedClient(value);
   };
 
   const handleCategoryChange = (value) => {
-    console.log('2 is ', value);
     setSelectedCategory(value);
   };
 
@@ -48,28 +43,22 @@ const NewNote = ({ navigation }) => {
   };
 
   const handleSave = async () => {
-    // Implement your save logic here
     console.log('Saving notes:', noteText);
 
-    // Save the new note to AsyncStorage
     const newNote = { id: Date.now(), client: selectedClient,category: selectedCategory, noteText };
     await saveNote(newNote);
 
-    // Clear the input field and update the saved notes state
     setNoteText('');
-    setSavedNotes([...savedNotes, newNote]);
+    // setSavedNotes([...savedNotes, newNote]);
 
-    // Navigate to the 'MyNotes' screen
     navigation.navigate('MyNotes');
   };
 
   const saveNote = async (note) => {
     try {
-      // Retrieve existing notes or initialize an empty array
       const existingNotes = await AsyncStorage.getItem(STORAGE_KEY);
       const notes = existingNotes ? JSON.parse(existingNotes) : [];
 
-      // Add the new note to the array
       notes.push(note);
 
       // Save the updated notes array to AsyncStorage
@@ -79,20 +68,8 @@ const NewNote = ({ navigation }) => {
     }
   };
 
-  // const loadNotes = async () => {
-  //   try {
-  //     // Retrieve notes from AsyncStorage
-  //     const existingNotes = await AsyncStorage.getItem(STORAGE_KEY);
-
-  //     // Parse the JSON string and update the state with the notes array
-  //     setSavedNotes(existingNotes ? JSON.parse(existingNotes) : []);
-  //   } catch (error) {
-  //     console.error('Error getting notes:', error);
-  //   }
-  // };
-
   return (
-    <View>
+    <View style={styles.body}>
       <Text>Select Client:</Text>
       <DropdownSelector
         label="Client"
@@ -129,6 +106,11 @@ const NewNote = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  body:{
+    paddingHorizontal:30,
+    paddingVertical:20,
+    justifyContent:"center",
+  },
   input: {
     padding: 10,
   },

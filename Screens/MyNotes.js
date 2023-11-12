@@ -15,7 +15,7 @@ const MyNotes = () => {
 
   const loadNotes = async () => {
     try {
-      const existingNotes = await AsyncStorage.getItem('notes');
+      const existingNotes = await AsyncStorage.getItem("notes");
       setNotes(existingNotes ? JSON.parse(existingNotes) : []);
     } catch (error) {
       console.error('Error getting notes:', error);
