@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
 import NoteCard from '../components/NoteCard';
-
+import { STORAGE_KEY } from '../Globals/constants';
 const MyNotes = () => {
   const navigation = useNavigation();
   const [notes, setNotes] = useState([]);
@@ -15,7 +15,7 @@ const MyNotes = () => {
 
   const loadNotes = async () => {
     try {
-      const existingNotes = await AsyncStorage.getItem("notes");
+      const existingNotes = await AsyncStorage.getItem(STORAGE_KEY);
       setNotes(existingNotes ? JSON.parse(existingNotes) : []);
     } catch (error) {
       console.error('Error getting notes:', error);
